@@ -18,7 +18,7 @@ function Map(props) {
   return (
     <When condition={props.latitude && props.longitude}>
       <figure>
-        <img src={`https://maps.locationiq.com/v3/staticmap?key=${API_KEY}&center=${props.latitude},${props.longitude}&size=400x300&format=png`} alt="" />
+        <img src={`https://maps.locationiq.com/v3/staticmap?key=${API_KEY}&center=${props.latitude},${props.longitude}&size=600x600&format=png`} alt="" />
       </figure>
     </When>
   )

@@ -1,4 +1,4 @@
-// this entire component is used from John's class demo
+// this entire component is used from John's class demo with the exception of ErrorCode
 
 import { useState } from 'react'
 

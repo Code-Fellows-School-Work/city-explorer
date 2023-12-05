@@ -31,3 +31,5 @@ Start time: _____
 Finish time: _____
 
 Actual time needed to complete: _____
+
+[Lighthouse Score](./src/assets/Lighthouse%20-%20Lab%206.PNG)
