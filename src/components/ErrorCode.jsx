@@ -1,3 +1,5 @@
+// used ChatGPT to generate this code
+
 import React from 'react';
 
 const ErrorDisplay = ({ errorCode }) => {
