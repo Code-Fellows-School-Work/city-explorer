@@ -20,8 +20,13 @@ function CityForm(props) {
     <form onSubmit={handleSubmit}>
       <label>
         <span>What City Are You In?</span>
-        <input onChange={handleChange} placeholder="Seattle, WA" />
+        <input 
+          id ="cityInput"
+          onChange={handleChange} 
+          placeholder="Explore"
+          value ={typedInCity} />
       </label>
+      <button type="submit">Explore!</button>
       {
         showHeading && props.city && <h2>Information about {props.city} Below</h2>
       }

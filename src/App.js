@@ -5,6 +5,7 @@ import axios from 'axios';
 import Header from "./components/Header.jsx";
 import CityForm from "./components/CityForm.jsx";
 import Map from './components/Map.jsx';
+import CityInfo from './components/CityInfo.jsx';
 import './App.css';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
@@ -49,6 +50,7 @@ function App() {
       <Header />
       <CityForm city={city} handleChangeCity={changeCity} />
       <Map latitude={latitude} longitude={longitude} />
+      {city && <CityInfo cityName = {city} latitude = {latitude} longitude={longitude}/>}
     </>
   )
 }
