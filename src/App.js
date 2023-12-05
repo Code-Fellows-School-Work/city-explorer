@@ -11,6 +11,7 @@ import CityInfo from './components/CityInfo.jsx';
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 function App() {
+  console.log("API Key:", API_KEY);
 
   const [city, setCity] = useState('');
   const [latitude, setLatitude] = useState(null);
@@ -29,7 +30,7 @@ function App() {
   async function getLocation(cityName){
 
     // 1. Call the API asynchronously
-    let url = `https://maps.locationiq.com/v3/staticmap?key=${API_KEY}&q=${cityName}&format=json`;
+    let url = `https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${cityName}&format=json`;
     try {
       let response = await axios.get(url);
       // 2. Put the city into state
