@@ -1,3 +1,5 @@
+// this entire component is used from John's class demo
+
 import {useState} from 'react';
 
 function CityForm(props) {

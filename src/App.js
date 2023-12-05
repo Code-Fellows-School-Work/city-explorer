@@ -1,3 +1,5 @@
+// this entire component is used from John's class demo
+
 import { useState } from 'react'
 
 import axios from 'axios';
@@ -6,7 +8,9 @@ import Header from "./components/Header.jsx";
 import CityForm from "./components/CityForm.jsx";
 import Map from './components/Map.jsx';
 import CityInfo from './components/CityInfo.jsx';
+import ErrorDisplay from './components/ErrorCode.jsx';
 import './App.css';
+
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -16,6 +20,7 @@ function App() {
   const [city, setCity] = useState('');
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
+  const [error, setError] = useState(null);
 
   function changeCity(newCity) {
 
@@ -39,21 +44,26 @@ function App() {
       // 3. Put the lat/lon into state
       setLatitude(response.data[0].lat);
       setLongitude(response.data[0].lon);
-
+      // 4. clears previous errors
+      setError(null);
     } catch(error) {
-      console.error(error.message)
+      setError(error.response ? error.response.status: 500);
     }
 
   }
 
   return (
-    <>
+    <div>
       <Header />
       <CityForm city={city} handleChangeCity={changeCity} />
-      <Map latitude={latitude} longitude={longitude} />
-      {city && <CityInfo cityName = {city} latitude = {latitude} longitude={longitude}/>}
-    </>
-  )
-}
+      {error ? (
+        <ErrorDisplay errorCode={error} />
+      ) : (
+        <Map latitude={latitude} longitude={longitude} />
+      )}
+       {city && <CityInfo cityName = {city} latitude = {latitude} longitude={longitude}/>}
+    </div>
+  );
+};
 
 export default App;
