@@ -6,7 +6,7 @@ import Header from "./components/Header.jsx";
 import CityForm from "./components/CityForm.jsx";
 import Map from './components/Map.jsx';
 import CityInfo from './components/CityInfo.jsx';
-// import './App.css';
+import './App.css';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
