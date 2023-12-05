@@ -1,4 +1,4 @@
-
+// this entire component is used from John's class demo
 
 import {When} from 'react-if';
 
