@@ -1,4 +1,4 @@
-// used ChatGPT to write this component
+// used ChatGPT to write this component.
 
 import React from 'react';
 

@@ -9,6 +9,7 @@ import Weather from './components/Weather';
 import './App.css';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
+const weather_API_KEY = process.env.weather_API_KEY;
 
 function App() {
   // console.log("API Key:", API_KEY);
