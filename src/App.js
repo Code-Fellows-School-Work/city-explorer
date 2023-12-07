@@ -5,7 +5,8 @@ import CityForm from "./components/CityForm.jsx";
 import Map from './components/Map.jsx';
 import CityInfo from './components/CityInfo.jsx';
 import ErrorDisplay from './components/ErrorCode.jsx';
-import Weather from './components/Weather';
+import Weather from './components/Weather.jsx';
+import Movies from './components/Movies.jsx';
 import './App.css';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
@@ -21,6 +22,7 @@ function App() {
   // changed to [] instead of null? -- I changed state to an empty array then modified weather.jsx file to use map and it sucessfully rendered the server weather data onto the webpage
   // const [forecast, setForecast] = useState([]);
   const [weatherData, setWeatherData] = useState(null);
+  const [moviesData, setMoviesData] = useState(null);
 
   async function getWeatherData(lat, lon) {
     try {
@@ -72,6 +74,7 @@ function App() {
           <Map latitude={latitude} longitude={longitude} />
           {city && <CityInfo cityName={city} latitude={latitude} longitude={longitude} />}
           {weatherData && <Weather weatherData={weatherData} />}
+          {moviesData ? <Movies moviesData={moviesData} error={error} /> : <p>Hello World</p>} 
         </>
       )}
     </div>
