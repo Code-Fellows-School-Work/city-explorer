@@ -2,21 +2,32 @@
 
 import React from 'react';
 
-function Weather({ forecastData }) {
-  return (
-    <div>
-      <h2>Weather Forecast for {forecastData.city_name}</h2>
-      {forecastData.city && forecastData.city.length > 0 ? (
-        <div>
-          <p>Date: {forecastData.city[0].valid_date}</p>
-          <p>Description: {forecastData.city[0].weather.description}</p>
-          {/* Add other weather details as needed */}
-        </div>
-      ) : (
-        <p>No forecast data available</p>
-      )}
-    </div>
-  );
-}
-
-export default Weather;
+const Weather = ({ forecastData, error }) => {
+    if (error) {
+      // Display an error message to the user
+      return <div>Error: {error}</div>;
+    }
+  
+    if (!forecastData || !forecastData.city || !forecastData.city.data) {
+      // Display a loading message or handle the absence of data
+      return <div>Loading...</div>;
+    }
+  
+    // Assuming forecastData follows the structure you provided
+    const cityName = forecastData.city.city_name;
+  
+    return (
+      <div>
+        <h1>Weather in {cityName}</h1>
+        {forecastData.city.data.map((day, index) => (
+          <div key={index}>
+            <p>Date: {day.valid_date}</p>
+            <p>Weather: {day.weather.description}</p>
+            {/* Add other information you want to display for each day */}
+          </div>
+        ))}
+      </div>
+    );
+  };
+  
+  export default Weather;
