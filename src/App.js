@@ -1,5 +1,3 @@
-// Inside your App.js file
-
 import { useState } from 'react';
 import axios from 'axios';
 import Header from "./components/Header.jsx";
@@ -19,12 +17,13 @@ function App() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [error, setError] = useState(null);
-  const [forecast, setForecast] = useState(null);
+  // changed to [] instead of null? -- I changed state to an empty array then modified weather.jsx file to use map and it sucessfully rendered the server weather data onto the webpage
+  const [forecast, setForecast] = useState([]);
 
   // New function to fetch weather data
   async function getWeatherData(lat, lon, searchQuery) {
     try {
-      let weatherResponse = await axios.get(`http://localhost:5510/weather`, {
+      let weatherResponse = await axios.get(`http://localhost:5511/weather`, {
         params: {
           lat: lat,
           lon: lon,
@@ -35,17 +34,15 @@ function App() {
       // Log the entire response for debugging
       console.log('Weather Response:', weatherResponse.data);
 
-      // Access the city and forecast data from the response
-      const cityData = weatherResponse.data.city;
-      const forecastData = weatherResponse.data.forecast;
-      setForecast(forecastData);
+      // Set the forecast data in state
+      setForecast(weatherResponse.data);
 
-      // Do something with the city and forecast data (e.g., update state)
-      console.log('City Data:', cityData);
-      console.log('Forecast Data:', forecastData);
+      // Do something with the forecast data
+      console.log('Forecast Data:', weatherResponse.data);
     } catch (error) {
       // Handle errors from the /weather endpoint
       console.error('Error fetching weather data:', error);
+      setError('Error fetching weather data');
     }
   }
 
