@@ -1,13 +1,16 @@
 // this entire component is used from John's class demo with the exception of ErrorCode
 
-import { useState } from 'react';
+import { useState } from 'react'
+
 import axios from 'axios';
+
 import Header from "./components/Header.jsx";
 import CityForm from "./components/CityForm.jsx";
 import Map from './components/Map.jsx';
 import CityInfo from './components/CityInfo.jsx';
 import ErrorDisplay from './components/ErrorCode.jsx';
 import './App.css';
+
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -19,59 +22,39 @@ function App() {
   const [longitude, setLongitude] = useState(null);
   const [error, setError] = useState(null);
 
-  // New function to fetch weather data
-  async function getWeatherData(lat, lon, searchQuery) {
-    try {
-      let weatherResponse = await axios.get(`http://localhost:5505/weather`, {
-        params: {
-          lat: lat,
-          lon: lon,
-          searchQuery: searchQuery,
-        },
-      });
-
-      // Access the city and forecast data from the response
-      const cityData = weatherResponse.data.city;
-      const forecastData = weatherResponse.data.forecast;
-
-      // Do something with the city and forecast data (e.g., update state)
-      console.log('City Data:', cityData);
-      console.log('Forecast Data:', forecastData);
-    } catch (error) {
-      // Handle errors from the /weather endpoint
-      console.error('Error fetching weather data:', error);
-    }
-  }
-
-  // Use API (locationIQ) to get the lat/lon
-  async function getLocation(cityName) {
-    // 1. Call the API asynchronously
-    let url = `https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${cityName}&format=json`;
-    try {
-      let response = await axios.get(url);
-      // 2. Put the city into state
-      setCity(response.data[0].display_name);
-
-      // 3. Put the lat/lon into state
-      setLatitude(response.data[0].lat);
-      setLongitude(response.data[0].lon);
-
-      // 4. clears previous errors
-      setError(null);
-
-      // 5. Make a new request to the /weather endpoint
-      getWeatherData(response.data[0].lat, response.data[0].lon, cityName);
-    } catch (error) {
-      setError(error.response ? error.response.status : 500);
-    }
-  }
-
   function changeCity(newCity) {
+
     // get the location data
     getLocation(newCity);
 
     // print a map
     console.log("Changing to", newCity);
+  }
+
+  // Use API (locationIQ) to get the lat/lon
+  async function getLocation(cityName){
+
+    // 1. Call the API asynchronously
+    let url = `https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${cityName}&format=json`;
+    try {
+      let response = await axios.get(url);
+      // 2. Put the city into state
+
+      // somewhere here i may need to add this and replace the url parameters:
+      //  {
+      //    params: {}
+      //  }
+      setCity(response.data[0].display_name)
+
+      // 3. Put the lat/lon into state
+      setLatitude(response.data[0].lat);
+      setLongitude(response.data[0].lon);
+      // 4. clears previous errors
+      setError(null);
+    } catch(error) {
+      setError(error.response ? error.response.status: 500);
+    }
+
   }
 
   return (
@@ -83,10 +66,9 @@ function App() {
       ) : (
         <Map latitude={latitude} longitude={longitude} />
       )}
-      {city && <CityInfo cityName={city} latitude={latitude} longitude={longitude} />}
+       {city && <CityInfo cityName = {city} latitude = {latitude} longitude={longitude}/>}
     </div>
   );
 };
 
 export default App;
-
