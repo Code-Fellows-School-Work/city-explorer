@@ -15,7 +15,7 @@ const Weather = ({ weatherData, error }) => {
 
   return (
     <div>
-      <h1>Weather in {weatherData.data[0].city_name}</h1>
+      <h2>Weather in {weatherData.data[0].city_name}</h2>
       <div>
         <p>Date and Time: {datetime}</p>
         <p>Weather: {weather.description}</p>
