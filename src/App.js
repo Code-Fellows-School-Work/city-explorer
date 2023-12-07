@@ -24,7 +24,7 @@ function App() {
 
   async function getWeatherData(lat, lon) {
     try {
-      let weatherResponse = await axios.get(`https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${WEATHER_API_KEY}`);
+      let weatherResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${WEATHER_API_KEY}&days=2`);
       console.log('Weather Response:', weatherResponse.data);
 
       // Set the weather data in state

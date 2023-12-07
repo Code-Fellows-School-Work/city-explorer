@@ -3,25 +3,26 @@
 import React from 'react';
 
 const Weather = ({ weatherData, error }) => {
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!weatherData || weatherData.count === 0 || !weatherData.data[0]) {
-    return <div>Loading...</div>;
-  }
-
-  const { datetime, weather } = weatherData.data[0];
-
-  return (
-    <div>
-      <h2>Weather in {weatherData.data[0].city_name}</h2>
+    if (error) {
+      return <div>Error: {error}</div>;
+    }
+  
+    if (!weatherData || weatherData.data.length === 0) {
+      return <div>Loading...</div>;
+    }
+  
+    return (
       <div>
-        <p>Date and Time: {datetime}</p>
-        <p>Weather: {weather.description}</p>
+        <h2>Weather in {weatherData.city_name}</h2>
+        {weatherData.data.map((day, index) => (
+          <div key={index}>
+            <p>Description: Low of {day.low_temp}, high of {day.high_temp} with {day.weather.description}</p>
+            <p>Date: {day.valid_date}</p>
+            <hr />
+          </div>
+        ))}
       </div>
-    </div>
-  );
-};
-
-export default Weather;
+    );
+  };
+  
+  export default Weather;
