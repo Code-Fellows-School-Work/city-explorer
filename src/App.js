@@ -27,31 +27,31 @@ function App() {
 
   async function getWeatherData(lat, lon) {
     try {
-      let weatherResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${WEATHER_API_KEY}&days=2`);
+      const weatherResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${WEATHER_API_KEY}&days=2`);
       console.log('Weather Response:', weatherResponse.data);
 
       // Set the weather data in state
       setWeatherData(weatherResponse.data);
-
     } catch (error) {
-      // Handle errors from the weather API
       console.error('Error fetching weather data:', error);
       setError('Error fetching weather data');
     }
   }
 
   async function getLocation(cityName) {
-    let url = `https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${cityName}&format=json`;
+    const locationUrl = `https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${cityName}&format=json`;
 
     try {
-      let response = await axios.get(url);
-      setCity(response.data[0].display_name);
-      setLatitude(response.data[0].lat);
-      setLongitude(response.data[0].lon);
+      const locationResponse = await axios.get(locationUrl);
+      const firstResult = locationResponse.data[0];
+
+      setCity(firstResult.display_name);
+      setLatitude(firstResult.lat);
+      setLongitude(firstResult.lon);
       setError(null);
 
       // Call the function to fetch weather data
-      getWeatherData(response.data[0].lat, response.data[0].lon);
+      getWeatherData(firstResult.lat, firstResult.lon);
     } catch (error) {
       setError(error.response ? error.response.status : 500);
     }
@@ -59,17 +59,14 @@ function App() {
 
   async function getMoviesData(cityName) {
     try {
-      let moviesResponse = await axios.get(
+      const moviesResponse = await axios.get(
         `https://api.themoviedb.org/3/search/movie?query=${cityName}&api_key=${MOVIE_API_KEY}`
       );
   
-      // Log the entire response for debugging
       console.log('Movies Response:', moviesResponse.data);
   
-      // Check if results exist before setting the state
       setMoviesData(moviesResponse.data.results);
     } catch (error) {
-      // Handle errors from the /movies endpoint
       console.error('Error fetching movie data:', error);
       setError('Error fetching movie data');
     }
@@ -80,9 +77,7 @@ function App() {
     console.log("Changing to", newCity);
 
     getMoviesData(newCity);
-
   }
-  
 
   return (
     <div>
