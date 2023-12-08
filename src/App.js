@@ -11,6 +11,7 @@ import './App.css';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 const WEATHER_API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
+const MOVIE_API_KEY = process.env.REACT_APP_MOVIE_API_KEY;
 
 function App() {
   // console.log("API Key:", API_KEY);
@@ -22,7 +23,7 @@ function App() {
   // changed to [] instead of null? -- I changed state to an empty array then modified weather.jsx file to use map and it sucessfully rendered the server weather data onto the webpage
   // const [forecast, setForecast] = useState([]);
   const [weatherData, setWeatherData] = useState(null);
-  const [moviesData, setMoviesData] = useState(null);
+  const [moviesData, setMoviesData] = useState([]);
 
   async function getWeatherData(lat, lon) {
     try {
@@ -32,8 +33,6 @@ function App() {
       // Set the weather data in state
       setWeatherData(weatherResponse.data);
 
-      // Do something with the weather data
-      console.log('Weather Data:', weatherResponse.data);
     } catch (error) {
       // Handle errors from the weather API
       console.error('Error fetching weather data:', error);
@@ -58,10 +57,32 @@ function App() {
     }
   }
 
+  async function getMoviesData(cityName) {
+    try {
+      let moviesResponse = await axios.get(
+        `https://api.themoviedb.org/3/discover/movie?api_key=${MOVIE_API_KEY}&with_keywords=${cityName}`
+      );
+  
+      // Log the entire response for debugging
+      console.log('Movies Response:', moviesResponse.data);
+  
+      // Check if results exist before setting the state
+      setMoviesData(moviesResponse.data.results);
+    } catch (error) {
+      // Handle errors from the /movies endpoint
+      console.error('Error fetching movie data:', error);
+      setError('Error fetching movie data');
+    }
+  }
+
   function changeCity(newCity) {
     getLocation(newCity);
     console.log("Changing to", newCity);
+
+    getMoviesData(newCity);
+
   }
+  
 
   return (
     <div>
