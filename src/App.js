@@ -60,7 +60,7 @@ function App() {
   async function getMoviesData(cityName) {
     try {
       let moviesResponse = await axios.get(
-        `https://api.themoviedb.org/3/discover/movie?api_key=${MOVIE_API_KEY}&with_keywords=${cityName}`
+        `https://api.themoviedb.org/3/search/movie?query=${cityName}&api_key=${MOVIE_API_KEY}`
       );
   
       // Log the entire response for debugging
