@@ -5,10 +5,13 @@ import CityForm from "./components/CityForm.jsx";
 import Map from './components/Map.jsx';
 import CityInfo from './components/CityInfo.jsx';
 import ErrorDisplay from './components/ErrorCode.jsx';
-import Weather from './components/Weather';
+import Weather from './components/Weather.jsx';
+import Movies from './components/Movies.jsx';
 import './App.css';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
+const WEATHER_API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
+const MOVIE_API_KEY = process.env.REACT_APP_MOVIE_API_KEY;
 
 function App() {
   // console.log("API Key:", API_KEY);
@@ -18,68 +21,68 @@ function App() {
   const [longitude, setLongitude] = useState(null);
   const [error, setError] = useState(null);
   // changed to [] instead of null? -- I changed state to an empty array then modified weather.jsx file to use map and it sucessfully rendered the server weather data onto the webpage
-  const [forecast, setForecast] = useState([]);
+  // const [forecast, setForecast] = useState([]);
+  const [weatherData, setWeatherData] = useState(null);
+  const [moviesData, setMoviesData] = useState([]);
 
-  // New function to fetch weather data
-  async function getWeatherData(lat, lon, searchQuery) {
+  async function getWeatherData(lat, lon) {
     try {
-      let weatherResponse = await axios.get(`http://localhost:5511/weather`, {
-        params: {
-          lat: lat,
-          lon: lon,
-          searchQuery: searchQuery,
-        },
-      });
-
-      // Log the entire response for debugging
+      let weatherResponse = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${WEATHER_API_KEY}&days=2`);
       console.log('Weather Response:', weatherResponse.data);
 
-      // Set the forecast data in state
-      setForecast(weatherResponse.data);
+      // Set the weather data in state
+      setWeatherData(weatherResponse.data);
 
-      // Do something with the forecast data
-      console.log('Forecast Data:', weatherResponse.data);
     } catch (error) {
-      // Handle errors from the /weather endpoint
+      // Handle errors from the weather API
       console.error('Error fetching weather data:', error);
       setError('Error fetching weather data');
     }
   }
 
-  // Use API (locationIQ) to get the lat/lon
   async function getLocation(cityName) {
-    // 1. Call the API asynchronously
     let url = `https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${cityName}&format=json`;
+
     try {
       let response = await axios.get(url);
-      // 2. Put the city into state
       setCity(response.data[0].display_name);
-
-      // 3. Put the lat/lon into state
       setLatitude(response.data[0].lat);
       setLongitude(response.data[0].lon);
-
-      // 4. clears previous errors
       setError(null);
 
-      // 5. Make a new request to the /weather endpoint
-      getWeatherData(
-        parseFloat(response.data[0].lat).toFixed(2),
-        parseFloat(response.data[0].lon).toFixed(2),
-        cityName
-      );
+      // Call the function to fetch weather data
+      getWeatherData(response.data[0].lat, response.data[0].lon);
     } catch (error) {
       setError(error.response ? error.response.status : 500);
     }
   }
 
-  function changeCity(newCity) {
-    // get the location data
-    getLocation(newCity);
-
-    // print a map
-    console.log("Changing to", newCity);
+  async function getMoviesData(cityName) {
+    try {
+      let moviesResponse = await axios.get(
+        `https://api.themoviedb.org/3/search/movie?query=${cityName}&api_key=${MOVIE_API_KEY}`
+      );
+  
+      // Log the entire response for debugging
+      console.log('Movies Response:', moviesResponse.data);
+  
+      // Check if results exist before setting the state
+      setMoviesData(moviesResponse.data.results);
+    } catch (error) {
+      // Handle errors from the /movies endpoint
+      console.error('Error fetching movie data:', error);
+      setError('Error fetching movie data');
+    }
   }
+
+  function changeCity(newCity) {
+    getLocation(newCity);
+    console.log("Changing to", newCity);
+
+    getMoviesData(newCity);
+
+  }
+  
 
   return (
     <div>
@@ -88,10 +91,13 @@ function App() {
       {error ? (
         <ErrorDisplay errorCode={error} />
       ) : (
-        <Map latitude={latitude} longitude={longitude} />
+        <>
+          <Map latitude={latitude} longitude={longitude} />
+          {city && <CityInfo cityName={city} latitude={latitude} longitude={longitude} />}
+          {weatherData && <Weather weatherData={weatherData} />}
+          {moviesData ? <Movies moviesData={moviesData} error={error} /> : <p>Hello World</p>} 
+        </>
       )}
-      {city && <CityInfo cityName={city} latitude={latitude} longitude={longitude} />}
-      {forecast && <Weather forecastData={forecast} />}
     </div>
   );
 }

@@ -1,29 +1,24 @@
-// used ChatGPT to write this component
+// used ChatGPT to write this component.
 
 import React from 'react';
 
-const Weather = ({ forecastData, error }) => {
+const Weather = ({ weatherData, error }) => {
     if (error) {
-      // Display an error message to the user
       return <div>Error: {error}</div>;
     }
   
-    if (!forecastData || !forecastData.city || !forecastData.city.data) {
-      // Display a loading message or handle the absence of data
+    if (!weatherData || weatherData.data.length === 0) {
       return <div>Loading...</div>;
     }
   
-    // Assuming forecastData follows the structure you provided
-    const cityName = forecastData.city.city_name;
-  
     return (
       <div>
-        <h1>Weather in {cityName}</h1>
-        {forecastData.city.data.map((day, index) => (
+        <h2>Weather in {weatherData.city_name}</h2>
+        {weatherData.data.map((day, index) => (
           <div key={index}>
+            <p>Description: Low of {day.low_temp}, high of {day.high_temp} with {day.weather.description}</p>
             <p>Date: {day.valid_date}</p>
-            <p>Weather: {day.weather.description}</p>
-            {/* Add other information you want to display for each day */}
+            <hr />
           </div>
         ))}
       </div>
