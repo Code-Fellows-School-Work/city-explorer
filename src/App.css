@@ -1,5 +1,5 @@
 body {
-  background-color: #f4f4f4;
+  background-color: #fff; /* Change background color to white */
   font-family: 'Arial', sans-serif;
 }
 
@@ -12,35 +12,36 @@ header {
 
 form {
   margin-top: 20px;
+  text-align: center; 
 }
 
-label {
-  display: block;
-  margin-bottom: 10px;
-}
+/* label {
+  display: none; 
+} */
 
 input {
-  width: 100%;
+  width: 60%; /* Adjust the width of the input field */
   padding: 10px;
   margin-bottom: 10px;
   box-sizing: border-box;
+  border: 1px solid #ccc; /* Add a border to the input field */
+  border-radius: 4px; /* Add border-radius for rounded corners */
+}
+
+/* Style specific to city-input */
+input#city-input {
+  width: 40%; /* Adjust the width of the city-input field */
 }
 
 button {
-  background-color: #007bff;
-  color: #111;
+  background-color: #4285f4; /* Use Google's search button color */
+  color: #fff;
   padding: 10px 20px;
   border: none;
   cursor: pointer;
+  border-radius: 4px; /* Add border-radius for rounded corners */
 }
 
 figure {
-  margin-top: 20px;
-}
-
-img {
-  width: 50%;
-  height: auto;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: none; /* Hide figure element */
 }
