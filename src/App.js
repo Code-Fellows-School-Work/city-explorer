@@ -1,4 +1,3 @@
-// App.js
 import { useState } from 'react';
 import axios from 'axios';
 import Header from './components/Header.jsx';
@@ -9,6 +8,14 @@ import ErrorDisplay from './components/ErrorCode.jsx';
 import Weather from './components/Weather.jsx';
 import Movies from './components/Movies.jsx';
 import './App.css';
+
+const REACT_APP_API_KEY = process.env.REACT_APP_API_KEY
+
+// Define the rounding function
+function roundToDecimalPlaces(value, decimalPlaces) {
+  const factor = 10 ** decimalPlaces;
+  return Math.round(value * factor) / factor;
+}
 
 function App() {
   const [city, setCity] = useState('');
@@ -38,30 +45,48 @@ function App() {
     }
   }
 
-  function changeCity(newCity) {
+  async function getLocation(cityName) {
+    const locationUrl = `https://us1.locationiq.com/v1/search?key=${REACT_APP_API_KEY}&q=${cityName}&format=json`;
+
+    try {
+      const response = await axios.get(locationUrl);
+
+      // Round latitude and longitude to 4 decimal places
+      const roundedLatitude = roundToDecimalPlaces(response.data[0].lat, 5);
+      const roundedLongitude = roundToDecimalPlaces(response.data[0].lon, 5);
+
+      setCity(response.data[0].display_name);
+      setLatitude(roundedLatitude);
+      setLongitude(roundedLongitude);
+      
+      getWeatherData(roundedLatitude, roundedLongitude);
+    } catch (error) {
+      setError(error.response ? error.response.status : 500);
+    }
+  }
+
+  async function getMapData(lat, lon) {
+    const mapUrl = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_API_KEY}&center=${lat},${lon}&size=600x600&format=png`;
+
+    try {
+      const mapResponse = await axios.get(mapUrl);
+      console.log('Map Data:', mapResponse.data);
+    } catch (error) {
+      console.error('Error fetching map data:', error);
+    }
+  }
+
+  async function changeCity(newCity) {
     getLocation(newCity);
     console.log('Changing to', newCity);
 
     getMoviesData(newCity);
-  }
 
-  async function getLocation(cityName) {
-    const locationUrl = `http://localhost:5513/api/location?cityName=${cityName}`;
-
-    try {
-      const locationResponse = await axios.get(locationUrl);
-      const firstResult = locationResponse.data[0];
-
-      setCity(firstResult.display_name);
-      setLatitude(firstResult.lat);
-      setLongitude(firstResult.lon);
-      setError(null);
-
-      // Call the function to fetch weather data
-      getWeatherData(firstResult.lat, firstResult.lon);
-    } catch (error) {
-      setError(error.response ? error.response.status : 500);
-    }
+    // Round latitude and longitude before passing to getMapData
+    const roundedLatitude = roundToDecimalPlaces(latitude, 5);
+    const roundedLongitude = roundToDecimalPlaces(longitude, 5);
+    
+    getMapData(roundedLatitude, roundedLongitude);
   }
 
   return (
